@@ -26,14 +26,55 @@ const Statistics = ({good, neutral, bad}) => {
   const percentPositive = (good / total) * 100 || 0
   return (
     <>
-      <h2>Statistics</h2>
-      <StatisticsLine text="Good" value={good} />
+      <h1>Statistics</h1>
+      <h3>Feedback Summary:</h3>
+      <table>
+        <tbody>
+          <tr>
+            <th>Response</th>
+            <th>Count</th>
+          </tr>
+          <tr>
+            <td>Good</td>
+            <td>{good}</td>
+          </tr>
+          <tr>
+            <td>Neutral</td>
+            <td>{neutral}</td>
+          </tr>
+          <tr>
+            <td>Bad</td>
+            <td>{bad}</td>
+          </tr>
+        </tbody>
+      </table>
+      {/* <StatisticsLine text="Good" value={good} />
       <StatisticsLine text="Neutral" value={neutral} />
-      <StatisticsLine text="Bad" value={bad} />
-      <h2>Advanced Statistics:</h2>
-      <StatisticsLine text="Total Responses" value={total} />
+      <StatisticsLine text="Bad" value={bad} /> */}
+      <h3>Advanced Statistics:</h3>
+      <table>
+        <tbody>
+          <tr>
+            <th>Stat Type</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td>Total Responses</td>
+            <td>{total}</td>
+          </tr>
+          <tr>
+            <td>Average</td>
+            <td>{average.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Percent Positive</td>
+            <td>{`${percentPositive.toFixed(2)}%`}</td>
+          </tr>
+        </tbody>
+      </table>
+      {/* <StatisticsLine text="Total Responses" value={total} />
       <StatisticsLine text="Average" value={average.toFixed(2)} />
-      <StatisticsLine text="Percent Positive" value={`${percentPositive.toFixed(2)}%`} />
+      <StatisticsLine text="Percent Positive" value={`${percentPositive.toFixed(2)}%`} /> */}
     </>
   )
 }
