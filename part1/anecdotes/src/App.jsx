@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css'
 
 const App = () => {
   const anecdotes = [
@@ -13,14 +14,27 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+  const registerVote = (index) => {
+    const newVotes = [...votes]
+    newVotes[index] += 1
+    setVotes(newVotes)
+  }
 
   return (
     <>
-      <div>
+      <div className='anecdote'>
         {anecdotes[selected]}
       </div>
       <div>
+        Votes: {votes[selected]}
+      </div>
+      <div>
         <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>Next Anecdote</button>
+      </div>
+      <div>
+        <button onClick={() => registerVote(selected)}>Vote</button>
       </div>
     </>
   )
