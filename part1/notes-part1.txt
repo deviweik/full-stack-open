@@ -1,0 +1,170 @@
+NOTES
+--------------
+
+1a. Introduction to React
+    How to initialize a React project:
+        # npm 6.x (outdated, but still used by some):
+        npm create vite@latest introdemo --template react
+
+        # npm 7+, extra double-dash is needed:
+        npm create vite@latest introdemo -- --template react
+
+        cd introdemo
+        npm install
+        npm run dev
+
+    Components
+        Written in JSX
+
+        JSX returned by React components is compiled into JavaScript
+
+        Complex applications can be kept maintainable by combining reusable components
+    
+    Props
+        Used to pass data to components
+
+        Props are passed as arguments of the component
+            <Hello name='George' />
+            'name' is a prop variable here
+            the component would receive a props object like so: {name: 'George'}
+
+        Destructuring props is a common and recommended practice
+            props = {firstName: 'First', lastName: 'Last'}
+
+            function Greeting({ firstName, lastName }) {
+                return <p>Welcome, {firstName} {lastName}!</p>;
+            }
+
+1b. JavaScript
+    Mutatable vs Immutable variables
+        Be mindful of which functions are mutating and which are non-mutating. 
+        In React, it is always prefered to use non-mutating functions which
+        return a new object and leave the original as is.
+        
+        Mutating Function Examples: push(), pop(), splice(), sort()
+
+        Non-mutating Function Examples: concat(), slice(), filter(), map(), reduce()
+    
+    Arrow Functions - it is common to use for ALL function definitions in React development
+
+1c. Component state, event handlers
+    Page re-rendering
+        Pages can be forcibly re-rendered by calling the render method
+            Example with helper function `refresh()`:
+                const root = ReactDOM.createRoot(document.getElementById('root'))
+
+                const refresh = () => {
+                    root.render(
+                        <App counter={counter} />
+                    )
+                }
+
+                refresh()
+                counter += 1
+                refresh()
+                counter += 1
+                refresh()
+
+    Stateful components
+        The preferred way to trigger re-rendering is by defining any 
+        variables that affect the UI as state. When state changes, 
+        React automatically re-renders the component.
+
+        Example use:
+            import { useState } from 'react'
+
+            const App = () => {
+                const [ counter, setCounter ] = useState(0)
+
+                setTimeout(
+                    () => setCounter(counter + 1),
+                    1000
+                )
+
+                return (
+                    <div>{counter}</div>
+                )
+            }
+
+            export default App
+
+    Event Handling
+        Button elements support mouse events, of which click is most common
+
+        Example of registering an event handler function to a click event:
+            const App = () => {
+                const [ counter, setCounter ] = useState(0)
+
+                return (
+                    <div>
+                        <div>{counter}</div>
+                        <button onClick={() => setCounter(counter + 1)}>
+                            plus
+                        </button>
+                    </div>
+                )
+            }
+        
+        Event handlers have to be set to a function. You can also 
+        set them to variables that contain functions
+            Example:
+                const increaseByOne = () => setCounter(counter + 1)
+                <button onClick={increaseByOne}>
+            
+            Invalid:
+                <button onClick={setCounter(counter + 1)}>
+
+    Passing state to child components
+        Several components often need to reflect the same changing data, 
+        this is typically handled by lifting the shared state up to the 
+        closest common ancestor
+
+1d. Complex state, debugging React
+    Complex State - typically accomplished by using useState multiple times
+        It can be beneficial to store state in more complex objects 
+        when it is changed together frequently, like x, y coordinates
+
+    Object Spread Syntax
+        const newClicks = { 
+            ...clicks, 
+            left: clicks.left + 1 
+        }
+
+        { ...clicks } creates a new object that has copies of all of 
+        the properties of the clicks object. Specifying a particular 
+        property afterwards will overwrite it with the new value
+
+    Note: state can never be mutated directly, a new object is created 
+    and state is set to this new value using the setState function 
+    returned by the hook (for arrays, use .concat instead of .push)
+
+    State updates are asynchronous
+        They do not occur instantly, but at some point before next render
+
+        If you want to immediately use a value that you are updating 
+        state to, you need to store that value in a new variable and 
+        use that instead
+
+    Dynamic event handlers (called Higher-Order Function or function factory)
+        It's possible to create a function that returns functions dynamically
+
+        This can be used to create event handler functions that accept an argument 
+
+Part 1 Lessons Learned:
+    - New project
+    - Create component and pass props
+    - Shared state
+    - Event handlers
+    - Complex state + spread syntax 
+    - Conditional rendering
+
+Final Planning 
+    Right Side Panel - toggled by footer
+    Content
+    Footer Menu
+
+    Content pages:
+        Activity Creation
+        Activity Logging
+        Day Review
+
