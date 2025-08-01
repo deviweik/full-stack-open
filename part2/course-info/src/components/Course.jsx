@@ -1,6 +1,6 @@
 const Header = ({ course }) => {
   return (
-    <h1>{course.name}</h1>
+    <h2>{course.name}</h2>
   )
 }
 
@@ -29,7 +29,7 @@ const Total = ({ course }) => {
   return (
     <>
       <p>
-        Number of exercises {totalExercises}
+        <b>Total Number of exercises:</b> {totalExercises}
       </p>
     </>
   )
@@ -38,9 +38,9 @@ const Total = ({ course }) => {
 const Course = ({ course }) => {
   return (
     <>
-      <Header course={course}/>
-      <Content course={course}/>
-      <Total course={course}/>
+        <Header course={course}/>
+        <Content course={course}/>
+        <Total course={course}/>
     </>
   )
 }
