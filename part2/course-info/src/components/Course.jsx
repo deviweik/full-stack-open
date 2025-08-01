@@ -40,7 +40,7 @@ const Course = ({ course }) => {
     <>
       <Header course={course}/>
       <Content course={course}/>
-      {/* <Total course={course}/> */}
+      <Total course={course}/>
     </>
   )
 }
