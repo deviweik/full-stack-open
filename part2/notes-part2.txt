@@ -1,0 +1,44 @@
+NOTES
+--------------
+
+2a. Rendering a collection, modules
+    Always use functional programming operaters with arrays (find, filter, map)
+
+    Generate React elements from array objects
+        Key attribute - used to determine how to update the view generated 
+        by a component when the component is re-rendered
+            Each child in an array or any iterator should have a unique 
+            `key` prop
+
+            Errors: notes.map(note => <li>{note.content}</li>)
+
+            Works: notes.map(note => <li key={note.id}>{note.content}</li>)
+
+        Using Array Index as Key - Not recommended!
+            Will technically work in most cases, but can lead to issues
+
+    Components commonly defined in src/components/
+        Referenced from other components (or App.jsx) like so:
+            import Note from './components/Note'
+
+            location is always given in relation to the importing file
+
+--------------
+Part 1 Lessons Learned:
+    - New project
+    - Create component and pass props
+    - Shared state
+    - Event handlers
+    - Complex state + spread syntax 
+    - Conditional rendering
+
+--------------
+Final Planning 
+    Right Side Panel - toggled by footer
+    Content
+    Footer Menu
+
+    Content pages:
+        Activity Creation
+        Activity Logging
+        Day Review
