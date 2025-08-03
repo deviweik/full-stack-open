@@ -3,9 +3,23 @@ import { useState } from 'react';
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas', number: '+1 404-893-1023' },
+    { name: 'Ada Lovelace', number: '+1 404-893-1024' },
+    { name: 'Dan Abramov', number: '+1 404-893-1025' },
+    { name: 'Mary Poppendieck', number: '+1 404-893-1026' }
   ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ search, setSearch ] = useState('')
+
+  const filteredPersons = persons.filter((person) => {
+    return person.name.toLowerCase().includes(search.toLowerCase())
+  })
+
+  const dispalyedPersons = search === '' ? persons : filteredPersons
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+  }
 
   const handleAddPerson = (e) => {
     e.preventDefault();
@@ -26,10 +40,12 @@ const App = () => {
 
   return (
     <div style={{margin: '4em'}}>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <hr/>
+      <h2>Add a New Number:</h2>
       <form onSubmit={handleAddPerson} style={{display: 'flex', flexDirection: 'column'}}>
         <div >
-          <label>Name: </label>
+          <label >Name: </label>
           <input 
             type='text'
             value={newName}
@@ -50,10 +66,19 @@ const App = () => {
           <button type="submit">Add</button>
         </div>
       </form>
-      <h2>Numbers</h2>
+      <hr/>
+      <h2>Search: </h2>
+      <input
+        type='text'
+        value={search}
+        onChange = {handleSearch}
+        placeholder = 'Search by name'
+      />
+      <hr/>
+      <h2>Numbers:</h2>
       <table>
         <tbody>
-          {persons.map((person) => (
+          {dispalyedPersons.map((person) => (
             <tr key={person.name}>
               <td style={{paddingRight: '1em'}}>{person.name}: </td>
               <td>{person.number}</td>
