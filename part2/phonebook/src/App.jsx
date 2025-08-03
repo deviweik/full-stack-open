@@ -8,6 +8,11 @@ const App = () => {
 
   const handleAddName = (e) => {
     e.preventDefault();
+    if (persons.filter((person) => person.name === newName).length > 0) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+      
     const newPerson = {
       name: newName
     }

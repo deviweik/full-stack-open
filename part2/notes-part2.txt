@@ -54,13 +54,8 @@ NOTES
             default action for an input change
 
 --------------
-Part 1 Lessons Learned:
-    - New project
-    - Create component and pass props
-    - Shared state
-    - Event handlers
-    - Complex state + spread syntax 
-    - Conditional rendering
+Part 2 Lessons Learned:
+    - 
 
 --------------
 Final Planning 
