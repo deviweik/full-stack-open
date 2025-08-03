@@ -1,7 +1,6 @@
 const PersonsList = ({ persons }) => {
   return (
     <>
-      <h2>Numbers:</h2>
       <table>
         <tbody>
           {persons.map((person) => (

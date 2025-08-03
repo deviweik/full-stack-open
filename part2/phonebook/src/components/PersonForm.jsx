@@ -1,7 +1,6 @@
 const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, handleAddPerson }) => {
   return (
     <>
-      <h2>Add a New Number:</h2>
       <form onSubmit={handleAddPerson} style={{display: 'flex', flexDirection: 'column'}}>
         <div >
           <label >Name: </label>

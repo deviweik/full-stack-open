@@ -45,10 +45,13 @@ const App = () => {
     <div style={{margin: '4em'}}>
       <h1>Phonebook</h1>
       <hr/>
+      <h2>Add a New Number:</h2>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleAddPerson={handleAddPerson} />
       <hr/>
+      <h2>Search: </h2>
       <SearchPersons search={search} handleSearch={handleSearch} />
       <hr/>
+      <h2>Numbers:</h2>
       <PersonsList persons={displayedPersons}/>
     </div>
   )

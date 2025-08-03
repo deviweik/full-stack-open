@@ -1,7 +1,6 @@
 const SearchPersons = ({ search, handleSearch }) => {
   return (
     <>
-      <h2>Search: </h2>
       <input
         type='text'
         value={search}
