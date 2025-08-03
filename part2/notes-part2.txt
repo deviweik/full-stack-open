@@ -53,9 +53,62 @@ NOTES
             event.preventDefault() is not needed here because there is no 
             default action for an input change
 
+2c. Getting data from server
+    json-server - developement tool that allows you to interact with a 
+    local json file as if it was a database
+        npm install json-server --save-dev
+            --save-dev when only in use for development
+
+        Create db.json file in root directory
+
+        command in root: npx json-server --port 3001 db.json
+
+        OR add `"server": "json-server -p 3001 db.json"` to `scripts` 
+        in package.json and use `npm run server`
+
+    Axios - npm install axios   
+        Promise - A Promise is an object representing the 
+        eventual completion or failure of an asynchronous operation.
+            Axios requests typically return a promise
+
+            Promise states: pending, fulfilled, rejected
+
+            The result of the operation represented by a promise 
+            is accessed by registering an event handler to the promise
+                promise.then(response => {
+                    console.log(response)
+                })
+            
+            Storing the promise object in a var is generally unnecessary
+                axios
+                    .get('http://localhost:3001/notes')
+                    .then(response => {
+                        const notes = response.data
+                        console.log(notes)
+                    })
+    Effect hooks - effects let a component connect/sync with external systems
+        ex: network transactions, browser DOM, animations, 
+        widgets using external UI libraries, other non-React code
+
+        Commonly used to fetch data from a server within a component
+
+        By default, effects run after every completed render
+            You can set dependencies that cause it to fire when 
+            certain values have changed
+
+
+
+
 --------------
 Part 2 Lessons Learned:
-    - 
+    - Functional programming operaters with arrays (find, filter, map)
+    - Key attribute on React elements from list
+    - Define components separately in src/components/
+    - Forms 
+    - Controlled Components (value controlled by state)
+    - JSON-Server
+    - Axios 
+    - Effect hooks
 
 --------------
 Final Planning 
