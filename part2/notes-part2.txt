@@ -23,6 +23,36 @@ NOTES
 
             location is always given in relation to the importing file
 
+2b. Forms
+    Basic form syntax:
+        <form onSubmit={eventHandler}>
+            <input type='text' />
+            <button type="submit">Save</button>
+        </form> 
+
+        basic event handler:
+            const eventHandler = (event) => {
+                event.preventDefault()
+                console.log('button clicked', event.target)
+            }
+    
+    Controlled Components - method for extracting form inputs
+        Add a new piece of state and set it to the `value` attribute of 
+        the input element along with an event handler assigned to the 
+        `onChange` attribute 
+
+        Form definition:
+            <input value={newValue} onChange={handleInputChange} />
+        
+        Event Handler:
+            const handleInputChange = (event) => {
+                console.log(event.target.value)
+                setNewValue(event.target.value)
+            }
+
+            event.preventDefault() is not needed here because there is no 
+            default action for an input change
+
 --------------
 Part 1 Lessons Learned:
     - New project
