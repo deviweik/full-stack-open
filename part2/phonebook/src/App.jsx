@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import PersonForm from './components/PersonForm';
+import SearchPersons from './components/SearchPersons';
+import PersonsList from './components/PersonsList';
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -15,7 +18,7 @@ const App = () => {
     return person.name.toLowerCase().includes(search.toLowerCase())
   })
 
-  const dispalyedPersons = search === '' ? persons : filteredPersons
+  const displayedPersons = search === '' ? persons : filteredPersons
 
   const handleSearch = (e) => {
     setSearch(e.target.value)
@@ -42,52 +45,13 @@ const App = () => {
     <div style={{margin: '4em'}}>
       <h1>Phonebook</h1>
       <hr/>
-      <h2>Add a New Number:</h2>
-      <form onSubmit={handleAddPerson} style={{display: 'flex', flexDirection: 'column'}}>
-        <div >
-          <label >Name: </label>
-          <input 
-            type='text'
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder='Enter name' 
-          />
-        </div>
-        <div>
-          <label>Number: </label>
-          <input 
-            type='text'
-            value={newNumber}
-            onChange={(e) => setNewNumber(e.target.value)}
-            placeholder='Enter number' 
-          />
-        </div>
-        <div style={{marginTop: '1em'}}>
-          <button type="submit">Add</button>
-        </div>
-      </form>
+      <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleAddPerson={handleAddPerson} />
       <hr/>
-      <h2>Search: </h2>
-      <input
-        type='text'
-        value={search}
-        onChange = {handleSearch}
-        placeholder = 'Search by name'
-      />
+      <SearchPersons search={search} handleSearch={handleSearch} />
       <hr/>
-      <h2>Numbers:</h2>
-      <table>
-        <tbody>
-          {dispalyedPersons.map((person) => (
-            <tr key={person.name}>
-              <td style={{paddingRight: '1em'}}>{person.name}: </td>
-              <td>{person.number}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PersonsList persons={displayedPersons}/>
     </div>
   )
 }
 
-export default App;
+export default App
