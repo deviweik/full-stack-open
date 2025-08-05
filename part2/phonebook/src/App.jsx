@@ -10,7 +10,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
 
-  const initialPersons = useEffect(() => {
+  useEffect(() => {
     axios.get('http://localhost:3001/persons').then(res => {
       setPersons(res.data)
     })
@@ -37,10 +37,14 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(newPerson));
-    setNewName('');
-    setNewNumber('');
-    console.log(`Added ${newPerson.name} to phonebook with number ${newPerson.number}`);
+    axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(res => {
+        setPersons(persons.concat(res.data))
+        setNewName('');
+        setNewNumber('');
+        console.log(`Added ${newPerson.name} to phonebook with number ${newPerson.number}`);
+      })
   }
 
   return (
