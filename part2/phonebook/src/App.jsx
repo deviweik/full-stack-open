@@ -31,9 +31,30 @@ const App = () => {
 
   const handleAddPerson = (e) => {
     e.preventDefault();
-    if (persons.filter((person) => person.name === newName).length > 0) {
-      alert(`${newName} is already added to phonebook`);
-      return;
+    const existingPerson = persons.find(person => person.name === newName);
+    console.log(existingPerson);
+    if (existingPerson) {
+      if (existingPerson.number === newNumber) {
+        console.log(`${newName}'s number is already set to ${newNumber}`);
+        alert(`${newName}'s number is already set to ${newNumber}`);
+        return;
+      } else if (
+        window.confirm(`${newName} is already in the phonebook, replace the old number (${existingPerson.number}) with the new one (${newNumber})?`)
+      ) {
+        const updatedPerson = {...existingPerson, number: newNumber}
+        PersonsService
+          .update(existingPerson.id, updatedPerson)
+          .then(res => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : res))
+          })
+        setNewName('');
+        setNewNumber('');
+        console.log(`Updated ${updatedPerson.name}'s number to ${updatedPerson.number}`);
+        return;
+      } else {
+        console.log(`Did not update ${newName}'s number`);
+        return;
+      }
     }
       
     const newPerson = {
@@ -62,7 +83,7 @@ const App = () => {
       }
     }
   }
-  
+
   return (
     <div style={{margin: '4em'}}>
       <h1>Phonebook</h1>
