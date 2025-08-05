@@ -3,6 +3,7 @@ import axios from 'axios';
 import PersonForm from './components/PersonForm';
 import SearchPersons from './components/SearchPersons';
 import PersonsList from './components/PersonsList';
+import PersonsService from './services/persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -11,9 +12,11 @@ const App = () => {
   const [ search, setSearch ] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then(res => {
-      setPersons(res.data)
-    })
+    PersonsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
   }, [])
 
   const filteredPersons = persons.filter((person) => {
@@ -37,16 +40,29 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    axios
-      .post('http://localhost:3001/persons', newPerson)
+    PersonsService
+      .create(newPerson)
       .then(res => {
-        setPersons(persons.concat(res.data))
+        setPersons(persons.concat(res))
         setNewName('');
         setNewNumber('');
         console.log(`Added ${newPerson.name} to phonebook with number ${newPerson.number}`);
       })
   }
 
+  const deletePerson = (id) => {
+    return () => {
+      if (window.confirm(`Delete ${persons.find(person => person.id === id).name}?`)) {
+        PersonsService
+          .remove(id)
+          .then(() => {
+            setPersons(persons.filter(person => person.id !== id))
+            console.log(`Deleted person with id ${id}`);
+          })
+      }
+    }
+  }
+  
   return (
     <div style={{margin: '4em'}}>
       <h1>Phonebook</h1>
@@ -58,7 +74,7 @@ const App = () => {
       <SearchPersons search={search} handleSearch={handleSearch} />
       <hr/>
       <h2>Numbers:</h2>
-      <PersonsList persons={displayedPersons}/>
+      <PersonsList persons={displayedPersons} deletePerson={deletePerson}/>
     </div>
   )
 }
