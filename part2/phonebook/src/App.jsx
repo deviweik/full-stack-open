@@ -59,6 +59,12 @@ const App = () => {
           .then(res => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : res))
           })
+          .catch(error => {
+            console.error(`Error updating person: ${error}`);
+            showAlert(`${existingPerson.name} has already been removed from the server`, 5);
+            setPersons(persons.filter(person => person.id !== existingPerson.id));
+            console.log(`Removed ${existingPerson.name} from phonebook due to error: ${error.message}`);
+          })
         setNewName('');
         setNewNumber('');
         showAlert(`Updated ${updatedPerson.name}'s number to ${updatedPerson.number}`, 3);
