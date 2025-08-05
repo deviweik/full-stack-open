@@ -96,6 +96,62 @@ NOTES
             You can set dependencies that cause it to fire when 
             certain values have changed
 
+2d. Altering data in server
+    RESTful API
+        Resources - individual data object (like the notes in example application)
+            Each has a unique address associated (url)
+                /notes -> returns all notes
+                /notes/3 -> returns note with id = 3
+        
+        Resources are fetched using HTTP GET requests
+
+        New resources are created using HTTP POST requests
+
+    Axios POST Request - second argument is the payload to post
+        axios.post('http://localhost:3001/notes', noteObject)
+
+    Extracting Backend Communication into Separate Module
+        Single Responsibility Principle
+            Each module or function should have one responsibility.
+            For backend communication, create a separate file (e.g., 
+            services/notes.js) to handle all server requests.
+
+            Example:
+            // services/notes.js
+            import axios from 'axios'
+            const baseUrl = 'http://localhost:3001/notes'
+
+            const getAll = () => axios.get(baseUrl).then(res => res.data)
+            const create = newObject => {
+                axios.post(baseUrl, newObject).then(res => res.data)
+            }
+
+            export default { getAll, create }
+            Then, import and use these functions in your components to keep 
+            data fetching logic separate from UI logic.
+
+    Streamlined syntax for defining object literals
+        Typical:
+            const name = 'Leevi'
+            const age = 0
+
+            const person = {
+                name: name,
+                age: age
+            }
+        
+        Streamlined: (Applicable whenever variable name is same as key)
+            const person = { name, age }
+    
+    Promises and Errors
+        Promise chain - every call to .then returns a new promise, which 
+        can have .then called on it again using the previous result/promise
+
+        Catch - .catch is used to define a handler function, which is 
+        called once any promise in the chain throws an error (promise > rejected)
+
+        
+        
 
 
 
@@ -108,7 +164,9 @@ Part 2 Lessons Learned:
     - Controlled Components (value controlled by state)
     - JSON-Server
     - Axios 
+    - Promises 
     - Effect hooks
+    - RESTful API
 
 --------------
 Final Planning 
