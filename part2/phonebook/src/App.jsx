@@ -4,12 +4,14 @@ import PersonForm from './components/PersonForm';
 import SearchPersons from './components/SearchPersons';
 import PersonsList from './components/PersonsList';
 import PersonsService from './services/persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     PersonsService
@@ -27,6 +29,16 @@ const App = () => {
 
   const handleSearch = (e) => {
     setSearch(e.target.value)
+  }
+
+  const showAlert = (message, seconds) => {
+    if (!seconds) {
+      seconds = 5
+    }
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, seconds * 1000)
   }
 
   const handleAddPerson = (e) => {
@@ -49,6 +61,7 @@ const App = () => {
           })
         setNewName('');
         setNewNumber('');
+        showAlert(`Updated ${updatedPerson.name}'s number to ${updatedPerson.number}`, 3);
         console.log(`Updated ${updatedPerson.name}'s number to ${updatedPerson.number}`);
         return;
       } else {
@@ -67,6 +80,7 @@ const App = () => {
         setPersons(persons.concat(res))
         setNewName('');
         setNewNumber('');
+        showAlert(`Added ${newPerson.name} to phonebook with number ${newPerson.number}`, 3);
         console.log(`Added ${newPerson.name} to phonebook with number ${newPerson.number}`);
       })
   }
@@ -78,6 +92,7 @@ const App = () => {
           .remove(id)
           .then(() => {
             setPersons(persons.filter(person => person.id !== id))
+            showAlert(`Deleted person with id ${id}`, 3);
             console.log(`Deleted person with id ${id}`);
           })
       }
@@ -87,6 +102,7 @@ const App = () => {
   return (
     <div style={{margin: '4em'}}>
       <h1>Phonebook</h1>
+      <Notification message={errorMessage}/>
       <hr/>
       <h2>Add a New Number:</h2>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleAddPerson={handleAddPerson} />
