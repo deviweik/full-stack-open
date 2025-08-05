@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import noteService from './services/notes'
 import Note from './components/Note'
+import Notification from './components/Notification'
+import Footer from './components/Footer'
 
 const App = ({ initialNotes }) => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
   
   useEffect(() => {
     noteService
@@ -62,9 +65,15 @@ const App = ({ initialNotes }) => {
         setNotes(notes.map(n => n.id !==id ? n : returnedNote))
       })
       .catch(error => {
-        alert(
-          `The Note '${note.content}' was already deleted from the server`
+        setErrorMessage(
+          `Note '${note.content}' was already deleted from server`
         )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        // alert(
+        //   `The Note '${note.content}' was already deleted from the server`
+        // )
         setNotes(notes.filter(n => n.id !== id))
       })
   }
@@ -81,6 +90,7 @@ const App = ({ initialNotes }) => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           Show {showAll ? 'important' : 'all'}
@@ -100,6 +110,7 @@ const App = ({ initialNotes }) => {
         <input type="text" value={newNote} placeholder="A new note..." onChange={handleNoteChange}/>
         <button type="submit">Add Note</button>
       </form>
+      <Footer />
     </div>
   )
 }

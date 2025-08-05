@@ -150,9 +150,51 @@ NOTES
         Catch - .catch is used to define a handler function, which is 
         called once any promise in the chain throws an error (promise > rejected)
 
-        
-        
+2e. Adding Styles to React App
+    CSS Basics
+        Selectors - defines which elements the rule should apply to
+            Class is an attribute of an element that is commonly used as a 
+            selector
+                CSS syntax: .class-name {}
 
+                In React classes are set by `className` attribute
+
+        Declarations - sets properties to a value
+    
+    Inline Styles - In React, the `style` attribute expects a JavaScript 
+    object, not a CSS string.
+        Property names must use camelCase (e.g., fontStyle) instead of 
+        kebab-case (e.g., font-style).
+
+        Numeric values for pixels can be defined as integers, while other 
+        units must be specified as strings (e.g., padding: '2em').
+
+        Example of normal CSS syntax:
+            {
+                color: green;
+                font-style: italic;
+            }
+        
+        Example of React inline style object:
+            {
+                color: 'green',
+                fontStyle: 'italic'
+            }
+        Pseudo-classes (like hover) can't be used inline
+            Pseudo-class examples:
+                :hover, :active, :focus, :visited, :first-child, etc
+
+            Best to use classes + traditional css for this
+    
+    Where should CSS exist?
+        Traditional approach - Content (HTML) and functionality (JS) 
+        should be entirely separate from styling (CSS)
+
+        React philosophy - base division of the application along the lines 
+        of its logical functional entities (Components)
+            Therefore, it is best to define all of these things at the 
+            individual component level to make them as independent and 
+            reusable as possible.
 
 
 --------------
@@ -167,6 +209,7 @@ Part 2 Lessons Learned:
     - Promises 
     - Effect hooks
     - RESTful API
+    - Catch errors
 
 --------------
 Final Planning 
