@@ -1,0 +1,557 @@
+Part 1 - Introduction to React
+    1a. Introduction to React
+        How to initialize a React project:
+            # npm 6.x (outdated, but still used by some):
+            npm create vite@latest introdemo --template react
+
+            # npm 7+, extra double-dash is needed:
+            npm create vite@latest introdemo -- --template react
+
+            cd introdemo
+            npm install
+            npm run dev
+
+        Components
+            Written in JSX
+
+            JSX returned by React components is compiled into JavaScript
+
+            Complex applications can be kept maintainable by combining reusable components
+        
+        Props
+            Used to pass data to components
+
+            Props are passed as arguments of the component
+                <Hello name='George' />
+                'name' is a prop variable here
+                the component would receive a props object like so: {name: 'George'}
+
+            Destructuring props is a common and recommended practice
+                props = {firstName: 'First', lastName: 'Last'}
+
+                function Greeting({ firstName, lastName }) {
+                    return <p>Welcome, {firstName} {lastName}!</p>;
+                }
+
+    1b. JavaScript
+        Mutatable vs Immutable variables
+            Be mindful of which functions are mutating and which are non-mutating. 
+            In React, it is always prefered to use non-mutating functions which
+            return a new object and leave the original as is.
+            
+            Mutating Function Examples: push(), pop(), splice(), sort()
+
+            Non-mutating Function Examples: concat(), slice(), filter(), map(), reduce()
+        
+        Arrow Functions - it is common to use for ALL function definitions in React development
+
+    1c. Component state, event handlers
+        Page re-rendering
+            Pages can be forcibly re-rendered by calling the render method
+                Example with helper function `refresh()`:
+                    const root = ReactDOM.createRoot(document.getElementById('root'))
+
+                    const refresh = () => {
+                        root.render(
+                            <App counter={counter} />
+                        )
+                    }
+
+                    refresh()
+                    counter += 1
+                    refresh()
+                    counter += 1
+                    refresh()
+
+        Stateful components
+            The preferred way to trigger re-rendering is by defining any 
+            variables that affect the UI as state. When state changes, 
+            React automatically re-renders the component.
+
+            Example use:
+                import { useState } from 'react'
+
+                const App = () => {
+                    const [ counter, setCounter ] = useState(0)
+
+                    setTimeout(
+                        () => setCounter(counter + 1),
+                        1000
+                    )
+
+                    return (
+                        <div>{counter}</div>
+                    )
+                }
+
+                export default App
+
+        Event Handling
+            Button elements support mouse events, of which click is most common
+
+            Example of registering an event handler function to a click event:
+                const App = () => {
+                    const [ counter, setCounter ] = useState(0)
+
+                    return (
+                        <div>
+                            <div>{counter}</div>
+                            <button onClick={() => setCounter(counter + 1)}>
+                                plus
+                            </button>
+                        </div>
+                    )
+                }
+            
+            Event handlers have to be set to a function. You can also 
+            set them to variables that contain functions
+                Example:
+                    const increaseByOne = () => setCounter(counter + 1)
+                    <button onClick={increaseByOne}>
+                
+                Invalid:
+                    <button onClick={setCounter(counter + 1)}>
+
+        Passing state to child components
+            Several components often need to reflect the same changing data, 
+            this is typically handled by lifting the shared state up to the 
+            closest common ancestor
+
+    1d. Complex state, debugging React
+        Complex State - typically accomplished by using useState multiple times
+            It can be beneficial to store state in more complex objects 
+            when it is changed together frequently, like x, y coordinates
+
+        Object Spread Syntax
+            const newClicks = { 
+                ...clicks, 
+                left: clicks.left + 1 
+            }
+
+            { ...clicks } creates a new object that has copies of all of 
+            the properties of the clicks object. Specifying a particular 
+            property afterwards will overwrite it with the new value
+
+        Note: state can never be mutated directly, a new object is created 
+        and state is set to this new value using the setState function 
+        returned by the hook (for arrays, use .concat instead of .push)
+
+        State updates are asynchronous
+            They do not occur instantly, but at some point before next render
+
+            If you want to immediately use a value that you are updating 
+            state to, you need to store that value in a new variable and 
+            use that instead
+
+        Dynamic event handlers (called Higher-Order Function or function factory)
+            It's possible to create a function that returns functions dynamically
+
+            This can be used to create event handler functions that accept an argument 
+
+    Part 1 Lessons Learned:
+        - New project
+        - Create component and pass props
+        - Shared state
+        - Event handlers
+        - Complex state + spread syntax 
+        - Conditional rendering
+
+    Final Planning 
+        Right Side Panel - toggled by footer
+        Content
+        Footer Menu
+
+        Content pages:
+            Activity Creation
+            Activity Logging
+            Day Review
+
+Part 2 - Communicating with server
+    2a. Rendering a collection, modules
+        Always use functional programming operaters with arrays (find, filter, map)
+
+        Generate React elements from array objects
+            Key attribute - used to determine how to update the view generated 
+            by a component when the component is re-rendered
+                Each child in an array or any iterator should have a unique 
+                `key` prop
+
+                Errors: notes.map(note => <li>{note.content}</li>)
+
+                Works: notes.map(note => <li key={note.id}>{note.content}</li>)
+
+            Using Array Index as Key - Not recommended!
+                Will technically work in most cases, but can lead to issues
+
+        Components commonly defined in src/components/
+            Referenced from other components (or App.jsx) like so:
+                import Note from './components/Note'
+
+                location is always given in relation to the importing file
+
+    2b. Forms
+        Basic form syntax:
+            <form onSubmit={eventHandler}>
+                <input type='text' />
+                <button type="submit">Save</button>
+            </form> 
+
+            basic event handler:
+                const eventHandler = (event) => {
+                    event.preventDefault()
+                    console.log('button clicked', event.target)
+                }
+        
+        Controlled Components - method for extracting form inputs
+            Add a new piece of state and set it to the `value` attribute of 
+            the input element along with an event handler assigned to the 
+            `onChange` attribute 
+
+            Form definition:
+                <input value={newValue} onChange={handleInputChange} />
+            
+            Event Handler:
+                const handleInputChange = (event) => {
+                    console.log(event.target.value)
+                    setNewValue(event.target.value)
+                }
+
+                event.preventDefault() is not needed here because there is no 
+                default action for an input change
+
+    2c. Getting data from server
+        json-server - developement tool that allows you to interact with a 
+        local json file as if it was a database
+            npm install json-server --save-dev
+                --save-dev when only in use for development
+
+            Create db.json file in root directory
+
+            command in root: npx json-server --port 3001 db.json
+
+            OR add `"server": "json-server -p 3001 db.json"` to `scripts` 
+            in package.json and use `npm run server`
+
+        Axios - npm install axios   
+            Promise - A Promise is an object representing the 
+            eventual completion or failure of an asynchronous operation.
+                Axios requests typically return a promise
+
+                Promise states: pending, fulfilled, rejected
+
+                The result of the operation represented by a promise 
+                is accessed by registering an event handler to the promise
+                    promise.then(response => {
+                        console.log(response)
+                    })
+                
+                Storing the promise object in a var is generally unnecessary
+                    axios
+                        .get('http://localhost:3001/notes')
+                        .then(response => {
+                            const notes = response.data
+                            console.log(notes)
+                        })
+        Effect hooks - effects let a component connect/sync with external systems
+            ex: network transactions, browser DOM, animations, 
+            widgets using external UI libraries, other non-React code
+
+            Commonly used to fetch data from a server within a component
+
+            By default, effects run after every completed render
+                You can set dependencies that cause it to fire when 
+                certain values have changed
+
+    2d. Altering data in server
+        RESTful API
+            Resources - individual data object (like the notes in example application)
+                Each has a unique address associated (url)
+                    /notes -> returns all notes
+                    /notes/3 -> returns note with id = 3
+            
+            Resources are fetched using HTTP GET requests
+
+            New resources are created using HTTP POST requests
+
+        Axios POST Request - second argument is the payload to post
+            axios.post('http://localhost:3001/notes', noteObject)
+
+        Extracting Backend Communication into Separate Module
+            Single Responsibility Principle
+                Each module or function should have one responsibility.
+                For backend communication, create a separate file (e.g., 
+                services/notes.js) to handle all server requests.
+
+                Example:
+                // services/notes.js
+                import axios from 'axios'
+                const baseUrl = 'http://localhost:3001/notes'
+
+                const getAll = () => axios.get(baseUrl).then(res => res.data)
+                const create = newObject => {
+                    axios.post(baseUrl, newObject).then(res => res.data)
+                }
+
+                export default { getAll, create }
+                Then, import and use these functions in your components to keep 
+                data fetching logic separate from UI logic.
+
+        Streamlined syntax for defining object literals
+            Typical:
+                const name = 'Leevi'
+                const age = 0
+
+                const person = {
+                    name: name,
+                    age: age
+                }
+            
+            Streamlined: (Applicable whenever variable name is same as key)
+                const person = { name, age }
+        
+        Promises and Errors
+            Promise chain - every call to .then returns a new promise, which 
+            can have .then called on it again using the previous result/promise
+
+            Catch - .catch is used to define a handler function, which is 
+            called once any promise in the chain throws an error (promise > rejected)
+
+    2e. Adding Styles to React App
+        CSS Basics
+            Selectors - defines which elements the rule should apply to
+                Class is an attribute of an element that is commonly used as a 
+                selector
+                    CSS syntax: .class-name {}
+
+                    In React classes are set by `className` attribute
+
+            Declarations - sets properties to a value
+        
+        Inline Styles - In React, the `style` attribute expects a JavaScript 
+        object, not a CSS string.
+            Property names must use camelCase (e.g., fontStyle) instead of 
+            kebab-case (e.g., font-style).
+
+            Numeric values for pixels can be defined as integers, while other 
+            units must be specified as strings (e.g., padding: '2em').
+
+            Example of normal CSS syntax:
+                {
+                    color: green;
+                    font-style: italic;
+                }
+            
+            Example of React inline style object:
+                {
+                    color: 'green',
+                    fontStyle: 'italic'
+                }
+            Pseudo-classes (like hover) can't be used inline
+                Pseudo-class examples:
+                    :hover, :active, :focus, :visited, :first-child, etc
+
+                Best to use classes + traditional css for this
+        
+        Where should CSS exist?
+            Traditional approach - Content (HTML) and functionality (JS) 
+            should be entirely separate from styling (CSS)
+
+            React philosophy - base division of the application along the lines 
+            of its logical functional entities (Components)
+                Therefore, it is best to define all of these things at the 
+                individual component level to make them as independent and 
+                reusable as possible.
+
+
+    --------------
+    Part 2 Lessons Learned:
+        - Functional programming operaters with arrays (find, filter, map)
+        - Key attribute on React elements from list
+        - Define components separately in src/components/
+        - Forms 
+        - Controlled Components (value controlled by state)
+        - JSON-Server
+        - Axios 
+        - Promises 
+        - Effect hooks
+        - RESTful API
+        - Catch errors
+
+    --------------
+    Final Planning 
+        Right Side Panel - toggled by footer
+        Content
+        Footer Menu
+
+        Content pages:
+            Activity Creation
+            Activity Logging
+            Day Review
+
+Part 3 - Programming a server with NodeJS and Express
+    3a. Node.js and Express
+        Creating a node project
+            Navigate to (or create) project directory, then `npm init`
+
+            Run the program with `node index.js`
+
+            Or add "start": "node index.js" to the "scripts" object in 
+            package.json in order to run with `npm start`
+    
+        Creating a simple server
+            // Import Node's built-in web server module
+            const http = require('http')
+
+            // Create a new web server and register an event handler
+            // This event handler is called every time an HTTP request 
+            // is made to the server's address 'http://localhost:3001'
+            const app = http.createServer((request, response) => {
+                // Respond to the request with status code 200
+                reponse.writeHead(200, { 'Content-Type': 'text/Plain' })
+                // Set site content to 'Hello World'
+                response.end('Hello World')
+            })
+
+            // Bind the http server in the app variable to listen to 
+            // requests sent to port 3001
+            const PORT = 3001
+            app.listen(PORT)
+            console.log(`Server running on port ${PORT}`)
+
+        The primary purpose of a backend server here is to offer raw 
+        data in JSON format to the frontend
+
+        Express - node library built to ease server-side development 
+        by offering a more pleasing interface to work with the built-in 
+        http module. Provides abstractions for many general use cases
+            install with `npm install express`
+
+        Creating a server with express
+            // import express, a function used to create an Express app
+            const express = require('express')
+            const app = express()
+
+            // define routes to the app
+            app.get('/', (request, response) => {
+                response.send('<h1>Hello World!</h1>')
+            })
+
+            const PORT = 3001
+            app.listen(PORT, () => {
+                console.log(`Server running on port ${PORT}`)
+            })
+
+        Automatic Change Tracking
+            Restarting the server to see changes take effect is cubmersome
+
+            `node --watch index.js` will make the server track changes 
+
+            recommend "dev" : "node --watch index.js" in "scripts"
+                This must be called with `run` command 
+
+                `npm run dev`
+
+        REST - Architectural style for building scalable web applications 
+            (Representational State Transfer)
+            
+            Standard URL Functionalities:
+                GET resource - fetches all resources in collection
+                GET resource/id - fetches single resource
+                POST resource - creates new resource with request data
+                DELETE resource/id - removes single resource
+                PUT resource/id - replaces entire identified resource
+                PATCH resource/id - replaces part of identified resource
+
+            This helps maintain a uniform interface that lets systems 
+            cooperate smoothly.
+
+        Requesting a specific resource 
+            // colon syntax used to define paramter `id` within route
+            app.get('/api/notes/:id', (req, res) => {
+                // access id paramter as so
+                const id = req.params.id
+                const note = notes.find(note => note.id === id)
+                if (note) {
+                    res.json(note)
+                } else {
+                    // If we don't check if the note exists, we would be 
+                    // returning a 200 status even though no data exists
+                    res.status(404).end()
+                    // the end() method is used for responding to a 
+                    // request without sending any data
+                }
+            })
+        
+        Status Codes 
+            1xx - Informational: These codes indicate that the server has 
+            received the request and is continuing to process it.
+            2xx - Success: These codes indicate that the request was 
+            successfully received, understood, and accepted. 
+                200 OK: Request was successful. 
+                201 Created: Request was successful and new resource 
+                was created. 
+                202 Accepted: Request was accepted for processing, but 
+                the processing is not yet complete. 
+                204 No Content: The server successfully processed the 
+                request, but is not returning any content. 
+            3xx - Redirection: These codes indicate that further 
+            action needs to be taken to complete the request, usually 
+            involving redirection to a different URL. 
+                301 Moved Permanently
+                302 Found: Requested resource temporarily moved to 
+                a different URL.
+                304 Not Modified: Requested resource has not been 
+                modified since the last time it was accessed.
+            4xx - Client Error: These codes indicate that the client made 
+            an error in the request, such as providing invalid syntax or 
+            lacking the necessary authorization. 
+                400 Bad Request: Server could not understand the request 
+                due to invalid syntax. 
+                401 Unauthorized: Invalid authentication credentials. 
+                403 Forbidden: The server understood the request but 
+                refuses to authorize it. 
+                404 Not Found: The requested resource could not be found 
+                on the server. 
+                405 Method Not Allowed: The request method is not 
+                supported for the requested resource. 
+            5xx - Server Error: These codes indicate that the server 
+            encountered an error while processing the request. 
+                500 Internal Server Error: The server encountered an 
+                unexpected condition that prevented it from fulfilling 
+                the request.
+                501 Not Implemented: The server does not support the 
+                functionality required to fulfill the request.
+                502 Bad Gateway: The server received an invalid response 
+                from an upstream server.
+                503 Service Unavailable: The server is currently 
+                unavailable, usually due to maintenance or overload.
+
+        Receiving Data 
+            To easily access data sent through a POST, PUT, or PATCH 
+            request, need to add line `app.use(express.json())`
+
+            This activates the Express json-parser
+                Without this, a json body would come through undefined
+            
+
+
+
+
+
+
+
+    --------------
+    Part 3 Lessons Learned:
+        - Node + Express project init
+        - 
+
+    --------------
+    Final Planning 
+        Right Side Panel - toggled by footer
+        Content
+        Footer Menu
+
+        Content pages:
+            Activity Creation
+            Activity Logging
+            Day Review
