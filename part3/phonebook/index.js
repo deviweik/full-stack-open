@@ -61,6 +61,24 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end();
 })
 
+app.post('/api/persons', (req, res) => {
+    const { name, number } = req.body;
+    if (!name || !number) {
+        return res.status(400).json({ error: 'Name or number is missing' });
+    }
+    const existingPerson = persons.find(p => p.name === name);
+    if (existingPerson) {
+        return res.status(400).json({ error: 'Name must be unique' });
+    }
+    const newPerson = {
+        id: (Math.random() * 10000).toFixed(0),
+        name,
+        number
+    };
+    persons.push(newPerson);
+    res.status(201).json(newPerson);
+})
+
 
 
 const PORT = 3001
