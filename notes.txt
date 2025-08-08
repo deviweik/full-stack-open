@@ -533,6 +533,59 @@ Part 3 - Programming a server with NodeJS and Express
             This activates the Express json-parser
                 Without this, a json body would come through undefined
             
+        HTTP Request Types
+            Request types have considerations in the form of two 
+            properties: 
+                Safety - executing requests must not cause any side 
+                effects on the server. The state of the database should 
+                not change as a result of the request. Must only return 
+                data that already exists on the server
+                    GET, HEAD (HEAD requests don't return a body)
+
+                Idempotency - The side effects of N > 0 identical 
+                requests is the same for a single request
+                    GET, HEAD, PUT, DELETE
+
+                POST is neither
+
+                These aren't requirements, but if HTTP standards are 
+                followed then these properties should hold true
+
+        Middleware
+            Functions that can be used for handling request and response 
+            objects 
+
+            ex: Express json-parser
+                Takes raw data from request object and parses it into a 
+                JavaScript object. Assigns it to new property `body`
+
+            Middleware receives three parameters:
+                const requestLogger = (request, response, next) => {
+                    console.log('Method:', request.method)
+                    console.log('Path:  ', request.path)
+                    console.log('Body:  ', request.body)
+                    console.log('---')
+                    next()
+                }
+
+                next isn't a defined function, it's a standard Express 
+                thing that passes control to the next middleware function
+
+                Example of how to use:
+                    const logger = (req, res, next) => {
+                        console.log(req.method, req.path);
+                        next(); // pass to the next middleware
+                    };
+
+                    const helloRoute = (req, res) => {
+                        res.send('Hello World');
+                    };
+
+                    app.use(logger);
+                    app.get('/', helloRoute);
+
+                Middleware functions are called in the order that 
+                they're encountered by the JavaScript engine
 
 
 
