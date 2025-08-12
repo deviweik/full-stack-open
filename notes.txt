@@ -587,7 +587,34 @@ Part 3 - Programming a server with NodeJS and Express
                 Middleware functions are called in the order that 
                 they're encountered by the JavaScript engine
 
+    3b. Deploying app to internet
+        Same origin policy and CORS 
+            A URL's origin is defined as the combination of protocol 
+            (scheme), hostname, and port 
+                http://example.com:80/index.html 
+                    protocol: http 
+                    host: example.com 
+                    port: 80 
+            
+            If a request is issued from some source HTML to a URL 
+            with a different origin, the browser will have to check 
+            the Access-Control-Allow-origin response header.
+                If it contains * on the URL of the source HTML, the 
+                browser will process the response, otherwise it will 
+                throw an error.
+            
+            The same-origin policy is a security mechanism browsers 
+            use in order to prevent session hijacking.
 
+            Cross-origin requests are enabled by a mechanism called 
+            CORS (Cross-Origin Resource Sharing)
+            
+            By default, JavaScript code of a browser run application 
+            can only communicate with a server in the same origin 
+
+            Cross-origin requests can be enabled through Node's cors 
+            middleware 
+                npm install cors
 
 
 
